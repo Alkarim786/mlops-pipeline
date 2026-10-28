@@ -1,0 +1,26 @@
+
+=== concept_drift: P(y|X) changes at step 40 (the label rule rotates); P(X) is unchanged
+  step   0  bootstrap  {'production': 1, 'holdout_accuracy': 0.928}
+  step  46  concept_drift_alert  {'detector': 'DDM', 'warning_since_step': 40}
+  step  49  retrained_and_canary_started  {'version': 2, 'rows': 800, 'holdout_accuracy': 0.905, 'train_seconds': 0.292, 'fraction': 0.2, 'faulty': False}
+  step  62  canary_promote  {'reason': 'candidate accuracy 0.833 vs production 0.571: non-inferior (lower bound +0.212)'}
+  summary: {"accuracy_before_drift": 0.9223, "accuracy_during_degradation": 0.6009, "accuracy_after_recovery_last20": 0.9065, "drift_injected_at_step": 40, "first_alert_step": 46, "detection_delay_steps": 6, "detection_delay_samples": 600, "retrain_seconds": [0.292], "alerts": 1, "retrains": 1, "promotions": 1, "rollbacks": 0, "promoted_at_step": 62, "final_production_version": 2, "batch_size": 100, "label_delay_steps": 2}  (34.1s wall)
+
+=== covariate_shift: P(X) shifts at step 40 (x0, x1 mean +2.5); the label rule is unchanged
+  step   0  bootstrap  {'production': 1, 'holdout_accuracy': 0.928}
+  step  41  data_drift_alert  {'detector': 'PSI+KS', 'features': ['x0', 'x1'], 'max_psi': 0.6}
+  step  49  retrained_and_canary_started  {'version': 2, 'rows': 800, 'holdout_accuracy': 0.94, 'train_seconds': 0.274, 'fraction': 0.2, 'faulty': False}
+  step  62  canary_promote  {'reason': 'candidate accuracy 0.902 vs production 0.492: non-inferior (lower bound +0.368)'}
+  summary: {"accuracy_before_drift": 0.9223, "accuracy_during_degradation": 0.5377, "accuracy_after_recovery_last20": 0.9125, "drift_injected_at_step": 40, "first_alert_step": 41, "detection_delay_steps": 1, "detection_delay_samples": 100, "retrain_seconds": [0.274], "alerts": 1, "retrains": 1, "promotions": 1, "rollbacks": 0, "promoted_at_step": 62, "final_production_version": 2, "batch_size": 100, "label_delay_steps": 2}  (34.6s wall)
+
+=== skewed_candidate: moderate concept drift, but the first retrained candidate has a serving-side feature bug; the canary must roll it back
+  step   0  bootstrap  {'production': 1, 'holdout_accuracy': 0.928}
+  step  56  concept_drift_alert  {'detector': 'DDM', 'warning_since_step': 41}
+  step  56  retrained_and_canary_started  {'version': 2, 'rows': 1400, 'holdout_accuracy': 0.9057, 'train_seconds': 0.418, 'fraction': 0.2, 'faulty': True}
+  step  69  canary_rollback  {'reason': 'candidate accuracy 0.443 significantly below production 0.783 (p=0.0000)'}
+  step  77  retrained_and_canary_started  {'version': 3, 'rows': 800, 'holdout_accuracy': 0.925, 'train_seconds': 0.227, 'fraction': 0.2, 'faulty': False}
+  step  89  canary_promote  {'reason': 'candidate accuracy 0.912 vs production 0.808: non-inferior (lower bound +0.065)'}
+  summary: {"accuracy_before_drift": 0.9223, "accuracy_during_degradation": 0.78, "accuracy_after_recovery_last20": 0.8935, "drift_injected_at_step": 40, "first_alert_step": 56, "detection_delay_steps": 16, "detection_delay_samples": 1600, "retrain_seconds": [0.418, 0.227], "alerts": 1, "retrains": 2, "promotions": 1, "rollbacks": 1, "promoted_at_step": 89, "final_production_version": 3, "batch_size": 100, "label_delay_steps": 2}  (35.2s wall)
+
+wrote docs/results.json
+FINISHED

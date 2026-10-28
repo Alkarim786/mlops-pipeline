@@ -1,0 +1,17 @@
+services:
+  # Model-serving + registry API on http://localhost:8000  (docs at /docs)
+  api:
+    build: .
+    ports: ["8000:8000"]
+    volumes: ["registry:/data"]
+
+  # Closed-loop demo (drift -> retrain -> canary), writes docs/results.json:
+  #   docker compose --profile demo run --rm demo
+  demo:
+    build: .
+    profiles: ["demo"]
+    command: ["python", "-m", "mlops.simulate", "--out", "/out/results.json"]
+    volumes: ["./docs:/out"]
+
+volumes:
+  registry:
